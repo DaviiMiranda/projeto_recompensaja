@@ -1,0 +1,66 @@
+<!-- Hero Section -->
+<app-hero-section />
+
+<!-- Container Principal -->
+<div class="home-container">
+  
+  <!-- Projetos em Destaque -->
+  <section class="home-section">
+    <div class="section-header">
+      <h2 class="section-title">✨ Projetos em Destaque</h2>
+      <a [routerLink]="['/explore']" class="section-link">Ver todos →</a>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-grid">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+      </div>
+    } @else {
+      <div class="projects-grid">
+        <app-project-card 
+          *ngFor="let project of featuredProjects()"
+          [project]="project"
+        />
+      </div>
+    }
+  </section>
+
+  <!-- Projetos Recentes -->
+  <section class="home-section">
+    <div class="section-header">
+      <h2 class="section-title">🔥 Projetos Recentes</h2>
+      <a [routerLink]="['/explore']" class="section-link">Ver todos →</a>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-grid">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+      </div>
+    } @else {
+      <div class="projects-grid">
+        <app-project-card 
+          *ngFor="let project of recentProjects()"
+          [project]="project"
+        />
+      </div>
+    }
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-content">
+      <h2 class="cta-title">Tem uma ideia incrível?</h2>
+      <p class="cta-text">
+        Comece seu projeto hoje e conecte-se com milhares de apoiadores prontos para transformar sua visão em realidade.
+      </p>
+      <app-button
+        buttonStyle="primary"
+        size="lg"
+        [routerLink]="['/criar-projeto']"
+      >
+        Criar Meu Projeto
+      </app-button>
+    </div>
+  </section>
+
+</div>

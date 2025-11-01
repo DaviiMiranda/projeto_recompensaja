@@ -1,0 +1,39 @@
+<div class="explore-container">
+  
+  <!-- Filtros (Sidebar) -->
+  <aside class="explore-sidebar">
+    <app-project-filters (filtersChanged)="onFiltersChange($event)" />
+  </aside>
+
+  <!-- Área Principal -->
+  <main class="explore-main">
+    <div class="explore-header">
+      <h1 class="explore-title">Explorar Projetos</h1>
+      <p class="explore-count">
+        @if (!loading()) {
+          {{ projects().length }} projeto(s) encontrado(s)
+        }
+      </p>
+    </div>
+
+    @if (loading()) {
+      <div class="projects-grid">
+        <div class="skeleton-card" *ngFor="let i of [1,2,3,4,5,6]"></div>
+      </div>
+    } @else if (projects().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🔍</div>
+        <h3 class="empty-title">Nenhum projeto encontrado</h3>
+        <p class="empty-text">Tente ajustar os filtros para ver mais resultados</p>
+      </div>
+    } @else {
+      <div class="projects-grid">
+        <app-project-card 
+          *ngFor="let project of projects()"
+          [project]="project"
+        />
+      </div>
+    }
+  </main>
+
+</div>

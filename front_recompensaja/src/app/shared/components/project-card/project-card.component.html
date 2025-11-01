@@ -1,0 +1,89 @@
+<div *ngIf="projectData() as project" class="project-card">
+  <a [routerLink]="['/projects', project.id]" class="project-card-link">
+    <!-- Imagem Principal -->
+    <div class="project-card-image">
+      <img 
+        [src]="project.imagemUrl" 
+        [alt]="project.titulo"
+        class="w-full h-full object-cover"
+      />
+      <div class="project-card-category">
+        {{ project.categoria }}
+      </div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="project-card-content">
+      <!-- Título -->
+      <h3 class="project-card-title">
+        {{ project.titulo }}
+      </h3>
+
+      <!-- Descrição Curta -->
+      <p class="project-card-description">
+        {{ project.descricaoCurta }}
+      </p>
+
+      <!-- Criador -->
+      <div class="project-card-creator">
+        <div class="creator-avatar">
+          <img 
+            *ngIf="project.criadorFoto; else defaultAvatar" 
+            [src]="project.criadorFoto" 
+            [alt]="project.criadorNome"
+            class="w-full h-full object-cover"
+          />
+          <ng-template #defaultAvatar>
+            <div class="default-avatar">
+              {{ project.criadorNome.charAt(0).toUpperCase() }}
+            </div>
+          </ng-template>
+        </div>
+        <span class="creator-name">por {{ project.criadorNome }}</span>
+      </div>
+
+      <!-- Barra de Progresso -->
+      <div *ngIf="progress() as prog" class="project-card-progress">
+        <div class="progress-bar">
+          <div 
+            class="progress-fill transition-all duration-300"
+            [ngClass]="getProgressBarColor(prog.percentual)"
+            [style.width.%]="prog.percentual"
+          ></div>
+        </div>
+        <div class="progress-info">
+          <span class="progress-percentage">{{ prog.percentual.toFixed(0) }}%</span>
+          <span class="progress-meta" [class.text-green-600]="prog.atingiuMeta">
+            {{ prog.atingiuMeta ? '✓ Meta atingida' : 'da meta' }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Informações Financeiras -->
+      <div class="project-card-stats">
+        <div class="stat-item">
+          <span class="stat-value">{{ formatCurrency(project.valorArrecadado) }}</span>
+          <span class="stat-label">arrecadado</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">{{ formatCurrency(project.metaValor) }}</span>
+          <span class="stat-label">meta</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">{{ progress()?.diasRestantes ?? 0 }}</span>
+          <span class="stat-label">dias restantes</span>
+        </div>
+      </div>
+
+      <!-- Número de Apoiadores (Opcional) -->
+      <div *ngIf="project.numeroApoiadores" class="project-card-backers">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+        </svg>
+        <span>{{ project.numeroApoiadores }} apoiadores</span>
+      </div>
+    </div>
+  </a>
+</div>

@@ -1,0 +1,147 @@
+@if (loading()) {
+  <div class="loading-container">
+    <div class="spinner"></div>
+  </div>
+} @else if (project(); as proj) {
+  <div class="details-container">
+    
+    <!-- Coluna Esquerda -->
+    <div class="details-left">
+      <!-- Mídia Principal -->
+      <div class="media-container">
+        @if (proj.videoUrl) {
+          <iframe 
+            class="video-frame"
+            [src]="proj.videoUrl" 
+            frameborder="0" 
+            allowfullscreen
+          ></iframe>
+        } @else {
+          <img [src]="proj.imagemUrl" [alt]="proj.titulo" class="main-image" />
+        }
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs-container">
+        <button 
+          class="tab" 
+          [class.tab-active]="activeTab() === 'description'"
+          (click)="changeTab('description')"
+        >
+          Descrição
+        </button>
+        <button 
+          class="tab"
+          [class.tab-active]="activeTab() === 'updates'"
+          (click)="changeTab('updates')"
+        >
+          Atualizações
+        </button>
+        <button 
+          class="tab"
+          [class.tab-active]="activeTab() === 'comments'"
+          (click)="changeTab('comments')"
+        >
+          Comentários
+        </button>
+      </div>
+
+      <!-- Conteúdo das Tabs -->
+      <div class="tab-content">
+        @if (activeTab() === 'description') {
+          <div class="description-content">
+            <h2 class="content-title">Sobre o Projeto</h2>
+            <p class="content-text">{{ proj.descricaoCompleta }}</p>
+            
+            <h3 class="content-subtitle">Sobre o Criador</h3>
+            <div class="creator-info">
+              <img 
+                [src]="proj.criadorFoto || 'https://ui-avatars.com/api/?name=' + proj.criadorNome"
+                [alt]="proj.criadorNome"
+                class="creator-avatar"
+              />
+              <div>
+                <p class="creator-name">{{ proj.criadorNome }}</p>
+                <p class="creator-role">Criador do Projeto</p>
+              </div>
+            </div>
+          </div>
+        }
+        
+        @if (activeTab() === 'updates') {
+          <div class="empty-tab">
+            <p>📢 Nenhuma atualização por enquanto</p>
+          </div>
+        }
+        
+        @if (activeTab() === 'comments') {
+          <div class="empty-tab">
+            <p>💬 Nenhum comentário ainda. Seja o primeiro!</p>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Coluna Direita (Sticky) -->
+    <aside class="details-right">
+      <div class="sidebar-sticky">
+        
+        <h1 class="project-title">{{ proj.titulo }}</h1>
+        <p class="project-short-desc">{{ proj.descricaoCurta }}</p>
+
+        <!-- Progresso -->
+        <div class="progress-section">
+          <div class="progress-bar-container">
+            <div 
+              class="progress-bar-fill"
+              [style.width.%]="getProgress()"
+            ></div>
+          </div>
+          <p class="progress-text">{{ getProgress().toFixed(0) }}% da meta</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-value">{{ formatCurrency(proj.valorArrecadado) }}</span>
+            <span class="stat-label">arrecadado de {{ formatCurrency(proj.metaValor) }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ proj.numeroApoiadores }}</span>
+            <span class="stat-label">apoiadores</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-value">{{ getDaysRemaining() }}</span>
+            <span class="stat-label">dias restantes</span>
+          </div>
+        </div>
+
+        <!-- Recompensas -->
+        <div class="rewards-section">
+          <h3 class="rewards-title">Escolha sua Recompensa</h3>
+          <div class="rewards-list">
+            <app-reward-card
+              *ngFor="let reward of rewards()"
+              [reward]="reward"
+              [selected]="selectedReward()?.id === reward.id"
+              (selectReward)="selectReward($event)"
+            />
+          </div>
+        </div>
+
+        <!-- Botão de Apoiar -->
+        <app-button
+          buttonStyle="primary"
+          size="lg"
+          [fullWidth]="true"
+          [disabled]="!selectedReward()"
+          (clicked)="supportProject()"
+        >
+          {{ selectedReward() ? 'Apoiar com ' + formatCurrency(selectedReward()!.valorMinimo) : 'Selecione uma Recompensa' }}
+        </app-button>
+
+      </div>
+    </aside>
+
+  </div>
+}
