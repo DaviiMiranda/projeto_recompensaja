@@ -36,10 +36,7 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/painel/painel.component').then(m => m.PainelComponent),
     canActivate: [authGuard]
   },
-  {
-    path: 'projects/:id',
-    loadComponent: () => import('./pages/project-details/project-details.component').then(m => m.ProjectDetailsComponent)
-  },
+  
   {
     path: 'configuracoes',
     loadComponent: () => import('./pages/configuracoes/configuracoes').then(m => m.ConfiguracoesComponent)
