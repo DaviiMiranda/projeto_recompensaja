@@ -1,69 +1,56 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
-import { User } from '../models/user.model';
+import { BehaviorSubject, Observable, of, delay } from 'rxjs';
+import { User } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly STORAGE_KEY = 'currentUser';
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
   
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasStoredUser());
-  private currentUserSubject = new BehaviorSubject<User | null>(this.getStoredUser());
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
+  public isAuthenticated$: Observable<boolean> = this.isAuthenticatedSubject.asObservable();
 
-  public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  public currentUser$ = this.currentUserSubject.asObservable();
-
-  constructor() {}
+  constructor() {
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+      const user = JSON.parse(savedUser);
+      this.currentUserSubject.next(user);
+      this.isAuthenticatedSubject.next(true);
+    }
+  }
 
   login(email: string, password: string): Observable<User> {
-    if (!email || !password) {
-      return throwError(() => new Error('Email e senha são obrigatórios'));
-    }
-
     const mockUser: User = {
       id: '1',
-      nome: 'Usuário Admin',
+      name: 'João Silva',
       email: email,
-      roles: ['CREATOR', 'BACKER'],
-      avatar: 'https://ui-avatars.com/api/?name=Usuario+Demo&background=4f46e5&color=fff'
+      avatar: 'https://ui-avatars.com/api/?name=João+Silva&background=0ea5e9&color=fff'
     };
 
     return of(mockUser).pipe(
-      delay(1000),
-      tap(user => {
-        this.setUser(user);
-      })
+      delay(1000)
     );
   }
 
-  logout(): void {
-    localStorage.removeItem(this.STORAGE_KEY);
-    this.isAuthenticatedSubject.next(false);
-    this.currentUserSubject.next(null);
+  setCurrentUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
+    this.isAuthenticatedSubject.next(true);
   }
 
-  isLoggedIn(): boolean {
-    return this.isAuthenticatedSubject.value;
+  logout(): void {
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
+    this.isAuthenticatedSubject.next(false);
   }
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 
-  private setUser(user: User): void {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(user));
-    this.isAuthenticatedSubject.next(true);
-    this.currentUserSubject.next(user);
-  }
-
-  private getStoredUser(): User | null {
-    const userJson = localStorage.getItem(this.STORAGE_KEY);
-    return userJson ? JSON.parse(userJson) : null;
-  }
-
-  private hasStoredUser(): boolean {
-    return !!localStorage.getItem(this.STORAGE_KEY);
+  isAuthenticated(): boolean {
+    return this.isAuthenticatedSubject.value;
   }
 }

@@ -1,55 +1,44 @@
-import { Component, Input, ChangeDetectionStrategy, computed, signal } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { Project, ProjectProgress } from '../../models/project.model';
+import { RouterLink } from '@angular/router';
+import { Project } from '../../../models/interfaces';
 
 @Component({
   selector: 'app-project-card',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './project-card.component.html',
-  styleUrls: ['./project-card.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./project-card.component.css']
 })
 export class ProjectCardComponent {
-  @Input({ required: true }) set project(value: Project) {
-    this._project.set(value);
+  @Input() project!: Project;
+
+  get progressPercentage(): number {
+    return Math.min((this.project.raisedAmount / this.project.goalAmount) * 100, 100);
   }
 
-  private _project = signal<Project | null>(null);
-  
-  projectData = computed(() => this._project());
-  
-  progress = computed(() => {
-    const project = this._project();
-    if (!project) return null;
-    
-    return this.calculateProgress(project);
-  });
-
-  private calculateProgress(project: Project): ProjectProgress {
-    const percentual = Math.min((project.valorArrecadado / project.metaValor) * 100, 100);
-    const diasRestantes = this.calculateDaysRemaining(project.dataLimite);
-    const atingiuMeta = project.valorArrecadado >= project.metaValor;
-
-    return { percentual, diasRestantes, atingiuMeta };
-  }
-
-  private calculateDaysRemaining(dataLimite: Date | string): number {
-    const hoje = new Date();
-    const limite = new Date(dataLimite);
-    const diffTime = limite.getTime() - hoje.getTime();
+  get daysRemaining(): number {
+    const today = new Date();
+    const deadline = new Date(this.project.deadline);
+    const diffTime = deadline.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return Math.max(0, diffDays);
   }
 
-  getProgressBarColor(percentual: number): string {
-    if (percentual >= 75) return 'bg-green-500';
-    if (percentual >= 50) return 'bg-yellow-500';
-    return 'bg-red-500';
+  get formattedRaisedAmount(): string {
+    return this.formatCurrency(this.project.raisedAmount);
   }
 
-  formatCurrency(value: number): string {
+  get formattedGoalAmount(): string {
+    return this.formatCurrency(this.project.goalAmount);
+  }
+
+  get formattedPublishedDate(): string {
+    const date = new Date(this.project.publishedDate);
+    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  private formatCurrency(value: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'

@@ -1,46 +1,44 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { User } from '../../../models/interfaces';
 
 @Component({
   selector: 'app-header',
+  standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
-  styleUrl: './header.component.css'
+  styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
-  isMenuOpen = signal(false);
-  isDropdownOpen = signal(false);
+export class HeaderComponent implements OnInit {
+  isAuthenticated = false;
+  currentUser: User | null = null;
+  isMenuOpen = false;
+  isProfileDropdownOpen = false;
 
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  constructor(private authService: AuthService) {}
 
-  get isAuthenticated$() {
-    return this.authService.isAuthenticated$;
-  }
+  ngOnInit(): void {
+    this.authService.isAuthenticated$.subscribe(isAuth => {
+      this.isAuthenticated = isAuth;
+    });
 
-  get currentUser$() {
-    return this.authService.currentUser$;
+    this.authService.currentUser$.subscribe(user => {
+      this.currentUser = user;
+    });
   }
 
   toggleMenu(): void {
-    this.isMenuOpen.update(value => !value);
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
-  toggleDropdown(): void {
-    this.isDropdownOpen.update(value => !value);
-  }
-
-  closeDropdown(): void {
-    this.isDropdownOpen.set(false);
+  toggleProfileDropdown(): void {
+    this.isProfileDropdownOpen = !this.isProfileDropdownOpen;
   }
 
   logout(): void {
     this.authService.logout();
-    this.closeDropdown();
-    this.router.navigate(['/']);
+    this.isProfileDropdownOpen = false;
   }
 }

@@ -1,155 +1,86 @@
-Este documento serve como o pontapé inicial para o desenvolvimento de uma plataforma full-stack de financiamento coletivo (crowdfunding) baseada em recompensas.
+Objetivo: Desenvolver a Single Page Application (SPA) completa para a plataforma "RecompensaJá". O foco é criar uma interface responsiva, moderna e intuitiva, construindo todos os componentes e telas com Angular e estilizando-os com Tailwind CSS.
 
-Objetivo Principal: Criar uma aplicação web robusta, segura e amigável que conecte "Criadores" (empreendedores, artistas, etc.) com "Apoiadores" (investidores/doadores). Criadores podem buscar financiamento para seus projetos, e Apoiadores podem financiar esses projetos em troca de recompensas predefinidas.
+Stack Tecnológica:
 
-1. Pilares Tecnológicos
+    Framework: Angular 20
 
-    Backend: Java 21 com Spring Boot
+    Estilização: Tailwind CSS (utility-first) ja integrado
 
-        API: RESTful (Spring Web)
+    Gerenciamento de Estado: Services com RxJS (BehaviorSubject/Observable)
 
-        Segurança: Spring Security (com autenticação baseada em JWT)
+    Formulários: Angular Reactive Forms
 
-        Banco de Dados: Spring Data JPA com MySQL
+    Mocking: Dados simulados em JSON/TS (usando o of() do RxJS nos services).
 
-        Validação: Spring Validation
+1. Diretrizes Visuais e Setup (Tailwind)
 
-    Frontend: Angular 
+    Design: O visual deve ser limpo, profissional e inspirar confiança. Priorize legibilidade e fácil navegação.
 
-        Estilização: Tailwind CSS (integrado ao Angular)
+    Responsividade: O design deve ser "mobile-first", adaptando-se perfeitamente a tablets e desktops.
 
-        Gerenciamento de Estado: Services com RxJS (ou NgRx, se a complexidade exigir)
+    Setup:
 
-        Formulários: Angular Reactive Forms
+        projeto ja integrado com a versao tailwind 3.4.17
 
-    Banco de Dados: MySQL.
+        Configurar o tailwind.config.js:
 
-2. Perfis de Usuário (User Roles)
+            Definir uma paleta de cores primária (ex: primary, secondary) para botões, links e destaques.
 
-    Apoiador (Backer): O usuário que financia os projetos.
+            Configurar fontes (ex: Inter, Poppins) para títulos e corpo de texto.
 
-    Criador (Creator): O usuário que cadastra projetos e busca financiamento. (Um usuário pode ser Apoiador e Criador).
+            Usar o plugin @tailwindcss/forms para estilização fácil de formulários.
 
-    Administrador (Admin): Gerencia a plataforma, aprova projetos e modera usuários.
+2. Estrutura de Módulos e Componentes
 
-3. Funcionalidades Essenciais (MVP - Minimum Viable Product)
+A aplicação deve ser organizada usando os princípios de módulos do Angular.
 
-Abaixo estão as "Epics" ou grandes blocos de funcionalidades.
+Módulo 1: CoreModule
 
-Módulo 1: Autenticação e Gerenciamento de Usuário (Backend + Frontend)
+    Objetivo: Conter serviços "singleton" e componentes de layout principais.
 
-    User Story (US): Como usuário, quero me cadastrar na plataforma (informando nome, e-mail, senha).
+    Componentes:
 
-    US: Como usuário, quero fazer login com e-mail e senha.
+        HeaderComponent: O navbar principal. Deve ser "sticky" e conter:
 
-    US: Como usuário, quero redefinir minha senha caso a esqueça.
+            Logo.
 
-    US: Como usuário logado, quero ver e editar meu perfil (foto, biografia, links sociais).
+            Links de navegação (Explorar).
 
-    Backend: Endpoints para /auth/register, /auth/login, /auth/refresh-token. Spring Security deve proteger os endpoints.
+            Barra de busca (simples).
 
-    Frontend: Páginas de Login, Cadastro e Perfil. Um AuthGuard para proteger rotas.
+            Lógica condicional:
 
-Módulo 2: Gerenciamento de Projetos (Fluxo do Criador)
+                Visitante: Botões "Login" e "Cadastre-se".
 
-    US: Como Criador, quero um formulário para submeter um novo projeto.
+                Logado: Ícone do perfil com um dropdown (Menu: Meu Painel, Editar Perfil, Sair), mais uma opção de meus projetos na navbar e um para criar projeto.
 
-        Campos: Título, Descrição Curta, Descrição Completa (com editor de rich text), Vídeo/Imagem Principal, Meta de Arrecadação (R$), Prazo Limite (data), Categoria (Tecnologia, Arte, Comunidade).
+        FooterComponent: Links institucionais, redes sociais, etc.
 
-    US: Como Criador, quero definir "Níveis de Recompensa" para meu projeto (ex: R$ 50 - Agradecimento; R$ 100 - Pulseira; R$ 500 - Cupom de 20%).
+    Services:
 
-    US: Como Criador, quero submeter meu projeto para "Aprovação do Administrador" (status inicial: PENDENTE).
+        AuthService: Deve simular o login/logout (ex: login(email, pass) retorna of(mockUser) após 1 segundo) e armazenar o estado de autenticação (ex: BehaviorSubject<boolean>).
+Módulo 2: SharedModule
 
-    US: Como Criador, quero ter um painel (dashboard) para ver o progresso dos meus projetos ativos (valor arrecadado, nº de apoiadores).
+    Objetivo: Conter componentes, diretivas e pipes reutilizáveis em toda a aplicação.
 
-    Backend: API REST para CRUD de Projetos e Recompensas. Endpoints protegidos por role (ROLE_CREATOR).
+    Componentes a criar:
 
-    Frontend: Formulário reativo de várias etapas para criação de projeto. Página "Meus Projetos" (dashboard do criador).
+        ButtonComponent: Um componente de botão genérico que aceita inputs para diferentes estilos (ex: [style]="'primary'", [style]="'outline'"). (Ótimo para praticar Tailwind @apply ou variantes).
 
-Módulo 3: Descoberta e Apoio (Fluxo do Apoiador)
+        ProjectCardComponent: O componente visual para listar um projeto. Deve mostrar:
 
-    US: Como Visitante/Apoiador, quero ver uma página inicial (Homepage) com projetos em destaque, recentes e mais populares.
+            Imagem principal.
 
-    US: Como Visitante/Apoiador, quero uma página de "Explorar" onde posso filtrar projetos por categoria, status (ativos, finalizados) ou buscar por palavra-chave.
+            Título do projeto.
 
-    US: Como Visitante/Apoiador, quero clicar em um projeto para ver sua página de detalhes (descrição, meta, valor atual, dias restantes, lista de recompensas).
+            Nome do Criador.
 
-    US: Como Apoiador, quero selecionar um nível de recompensa, informar o valor e realizar o pagamento (simulação de pagamento no MVP).
+            Barra de progresso (calculada: valorArrecadado / metaValor).
 
-    Backend: Endpoints públicos (GET) para listagem e visualização de projetos. Endpoint protegido (POST /projects/{id}/back) para registrar um apoio.
+            Valor arrecadado.
 
-    Frontend: Componentes de Card de Projeto, Página de Detalhes do Projeto, Página de Exploração com filtros.
+            Dias restantes.
 
-Módulo 4: Painel de Administração (Fluxo do Admin)
+            data de publicação
 
-    US: Como Admin, quero um painel para ver todos os projetos com status PENDENTE.
-
-    US: Como Admin, quero aprovar ou rejeitar projetos pendentes (com um campo para feedback em caso de rejeição).
-
-    US: Como Admin, quero poder gerenciar usuários (ex: banir, tornar admin).
-
-    Backend: Endpoints (/admin/**) protegidos com ROLE_ADMIN.
-
-    Frontend: Uma seção separada (ex: /admin) com tabelas e formulários para moderação.
-
-Módulo 5: Funcionalidades Adicionais (Pós-MVP)
-
-    Integração de Pagamento Real: Integração com Stripe, PagSeguro ou Mercado Pago para processar os pagamentos.
-
-    Chatbot: Como descrito, um chatbot (pode ser simples, baseado em regras, ou integrado com uma ferramenta como Dialogflow) para responder FAQs.
-
-    Comentários: Seção de comentários na página de cada projeto.
-
-    Notificações: E-mails transacionais (projeto aprovado, novo apoio recebido, etc.).
-
-4. Modelo de Dados (Entidades JPA Sugeridas)
-
-    User: (id, nome, email, senha, roles[ADMIN, CREATOR, BACKER])
-
-    Project: (id, titulo, descricao, metaValor, valorArrecadado, dataLimite, status[PENDENTE, ATIVO, SUCESSO, FALHOU], criador [ManyToOne com User], categoria [ManyToOne com Category])
-
-    Reward: (id, titulo, descricao, valorMinimo, projeto [ManyToOne com Project])
-
-    Pledge (Apoio): (id, valor, data, apoiador [ManyToOne com User], recompensa [ManyToOne com Reward], projeto [ManyToOne com Project])
-
-    Category: (id, nome)
-
-5. Arquitetura e Estrutura
-
-    Backend (Spring Boot):
-
-        Estrutura: Pacotes por funcionalidade (ex: auth, project, user, payment).
-
-        Padrão: Controller -> Service (lógica de negócios) -> Repository (acesso a dados).
-
-        DTOs: Usar Data Transfer Objects (DTOs) para comunicação entre o Controller e o Frontend, com validações.
-
-    Frontend (Angular):
-
-        Módulos: Estrutura modular (ex: AuthModule, ProjectModule, AdminModule, CoreModule, SharedModule).
-
-        Tailwind: Configurar o tailwind.config.js para o tema do projeto e usar classes utilitárias diretamente no HTML dos componentes.
-
-        Services: Centralizar chamadas de API em services (ex: ProjectService, AuthService).
-
-6. Primeiros Passos (Plano de Ação)
-
-    Setup do Ambiente:
-
-        Criar o projeto Spring Boot (via Spring Initializr) com as dependências (Web, JPA, Security, driver de DB).
-
-        Criar o projeto Angular (via ng new) e adicionar o Tailwind CSS (ng add tailwindcss).
-
-    Desenvolver Módulo 1 (Autenticação):
-
-        Implementar o backend (entidade User, AuthService, endpoints de login/registro, configuração do Spring Security com JWT).
-
-        Implementar o frontend (páginas de login/registro, AuthService no Angular, AuthGuard).
-
-    Desenvolver Módulo 2 (Criação de Projeto):
-
-        Implementar o backend (entidades Project, Reward, Category e seus CRUDs).
-
-        Implementar o frontend (formulário de criação de projeto).
-
-    Iterar: Continuar com os módulos 3 e 4, conectando o frontend ao backend passo a passo.
+        InputComponent: Um wrapper para input que se integre com o Reactive Forms e exiba mensagens de erro de validação.

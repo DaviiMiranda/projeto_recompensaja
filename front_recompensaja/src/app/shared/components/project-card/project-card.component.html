@@ -1,88 +1,56 @@
-<div *ngIf="projectData() as project" class="project-card">
-  <a [routerLink]="['/projects', project.id]" class="project-card-link">
-    <!-- Imagem Principal -->
-    <div class="project-card-image">
+<div class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden group">
+  <a [routerLink]="['/projeto', project.id]">
+    <!-- Image -->
+    <div class="relative h-48 overflow-hidden">
       <img 
-        [src]="project.imagemUrl" 
-        [alt]="project.titulo"
-        class="w-full h-full object-cover"
+        [src]="project.image" 
+        [alt]="project.title"
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
       />
-      <div class="project-card-category">
-        {{ project.categoria }}
+      <div class="absolute top-3 right-3 bg-white px-3 py-1 rounded-full text-xs font-semibold text-gray-700">
+        {{ daysRemaining }} dias
       </div>
     </div>
 
-    <!-- Conteúdo -->
-    <div class="project-card-content">
-      <!-- Título -->
-      <h3 class="project-card-title">
-        {{ project.titulo }}
+    <!-- Content -->
+    <div class="p-5">
+      <!-- Title -->
+      <h3 class="text-xl font-display font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition">
+        {{ project.title }}
       </h3>
 
-      <!-- Descrição Curta -->
-      <p class="project-card-description">
-        {{ project.descricaoCurta }}
+      <!-- Creator -->
+      <p class="text-sm text-gray-600 mb-4">
+        por <span class="font-medium">{{ project.creator }}</span>
       </p>
 
-      <!-- Criador -->
-      <div class="project-card-creator">
-        <div class="creator-avatar">
-          <img 
-            *ngIf="project.criadorFoto; else defaultAvatar" 
-            [src]="project.criadorFoto" 
-            [alt]="project.criadorNome"
-            class="w-full h-full object-cover"
-          />
-          <ng-template #defaultAvatar>
-            <div class="default-avatar">
-              {{ project.criadorNome.charAt(0).toUpperCase() }}
-            </div>
-          </ng-template>
-        </div>
-        <span class="creator-name">por {{ project.criadorNome }}</span>
-      </div>
-
-      <!-- Barra de Progresso -->
-      <div *ngIf="progress() as prog" class="project-card-progress">
-        <div class="progress-bar">
+      <!-- Progress Bar -->
+      <div class="mb-3">
+        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
           <div 
-            class="progress-fill transition-all duration-300"
-            [ngClass]="getProgressBarColor(prog.percentual)"
-            [style.width.%]="prog.percentual"
+            class="bg-primary-600 h-2 rounded-full transition-all duration-500"
+            [style.width.%]="progressPercentage"
           ></div>
         </div>
-        <div class="progress-info">
-          <span class="progress-percentage">{{ prog.percentual.toFixed(0) }}%</span>
-          <span class="progress-meta" [class.text-green-600]="prog.atingiuMeta">
-            {{ prog.atingiuMeta ? '✓ Meta atingida' : 'da meta' }}
-          </span>
+      </div>
+
+      <!-- Stats -->
+      <div class="flex justify-between items-center mb-3">
+        <div>
+          <p class="text-2xl font-bold text-gray-900">{{ formattedRaisedAmount }}</p>
+          <p class="text-sm text-gray-600">arrecadado de {{ formattedGoalAmount }}</p>
+        </div>
+        <div class="text-right">
+          <p class="text-lg font-bold text-primary-600">{{ progressPercentage.toFixed(0) }}%</p>
+          <p class="text-sm text-gray-600">do objetivo</p>
         </div>
       </div>
 
-      <!-- Informações Financeiras -->
-      <div class="project-card-stats">
-        <div class="stat-item">
-          <span class="stat-value">{{ formatCurrency(project.valorArrecadado) }}</span>
-          <span class="stat-label">arrecadado</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-value">{{ formatCurrency(project.metaValor) }}</span>
-          <span class="stat-label">meta</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-value">{{ progress()?.diasRestantes ?? 0 }}</span>
-          <span class="stat-label">dias restantes</span>
-        </div>
-      </div>
-
-      <!-- Número de Apoiadores (Opcional) -->
-      <div *ngIf="project.numeroApoiadores" class="project-card-backers">
-        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-        </svg>
-        <span>{{ project.numeroApoiadores }} apoiadores</span>
+      <!-- Published Date -->
+      <div class="pt-3 border-t border-gray-200">
+        <p class="text-xs text-gray-500">
+          Publicado em {{ formattedPublishedDate }}
+        </p>
       </div>
     </div>
   </a>

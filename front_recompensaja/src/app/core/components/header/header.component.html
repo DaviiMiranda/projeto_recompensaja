@@ -1,213 +1,151 @@
-<header class="sticky top-0 z-50 bg-white shadow-md">
-  <nav class="container mx-auto px-4 py-3">
+<header class="bg-white shadow-md sticky top-0 z-50">
+  <nav class="container mx-auto px-4 py-4">
     <div class="flex items-center justify-between">
       <!-- Logo -->
-      <a routerLink="/" class="flex items-center space-x-2">
-        <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center">
-          <span class="text-white font-bold text-xl">R</span>
-        </div>
-        <span class="text-xl font-bold text-gray-800">RecompensaJá</span>
-      </a>
+      <div class="flex items-center">
+        <a routerLink="/" class="text-2xl font-display font-bold text-primary-600">
+          RecompensaJá
+        </a>
+      </div>
 
       <!-- Desktop Navigation -->
       <div class="hidden md:flex items-center space-x-6">
-        <a routerLink="/explorar" class="text-gray-700 hover:text-indigo-600 transition-colors">
+        <a routerLink="/explorar" class="text-gray-700 hover:text-primary-600 font-medium transition">
           Explorar
         </a>
-        <a routerLink="/publicacoes" class="text-gray-700 hover:text-indigo-600 transition-colors">
-          Publicações
-        </a>
-        <a routerLink="/criar-projeto" class="text-gray-700 hover:text-indigo-600 transition-colors">
-          Criar Projeto
-        </a>
-      </div>
 
-      <!-- Search Bar -->
-      <div class="hidden lg:block flex-1 max-w-md mx-6">
-        <input
-          type="text"
-          placeholder="Buscar projetos..."
-          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-      </div>
-
-      <!-- Auth Section -->
-      <div class="hidden md:flex items-center space-x-4">
-        @if (isAuthenticated$ | async) {
-          <!-- Settings Icon -->
-          <a
-            routerLink="/configuracoes"
-            class="p-2 text-gray-700 hover:text-indigo-600 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Configurações"
-          >
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-            </svg>
+        @if (isAuthenticated) {
+          <a routerLink="/meus-projetos" class="text-gray-700 hover:text-primary-600 font-medium transition">
+            Meus Projetos
           </a>
-          
+          <a routerLink="/criar-projeto" class="text-gray-700 hover:text-primary-600 font-medium transition">
+            Criar Projeto
+          </a>
+        }
+
+        <!-- Search Bar -->
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Buscar projetos..."
+            class="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
+          <svg class="absolute right-3 top-2.5 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </div>
+
+        <!-- Auth Buttons (Visitor) -->
+        @if (!isAuthenticated) {
+          <a routerLink="/login" class="text-gray-700 hover:text-primary-600 font-medium transition">
+            Login
+          </a>
+          <a
+            routerLink="/cadastro"
+            class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition font-medium"
+          >
+            Cadastre-se
+          </a>
+        }
+
+        <!-- Profile Dropdown (Logged) -->
+        @if (isAuthenticated && currentUser) {
           <div class="relative">
             <button
-              (click)="toggleDropdown()"
+              (click)="toggleProfileDropdown()"
               class="flex items-center space-x-2 focus:outline-none"
             >
-              @if (currentUser$ | async; as user) {
-                <img
-                  [src]="user.avatar || 'https://ui-avatars.com/api/?name=' + user.nome"
-                  [alt]="user.nome"
-                  class="w-10 h-10 rounded-full border-2 border-indigo-600"
-                />
-                <span class="text-gray-700 font-medium">{{ user.nome }}</span>
-                <svg
-                  class="w-4 h-4 text-gray-500"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              }
+              <img
+                [src]="currentUser.avatar || 'https://ui-avatars.com/api/?name=' + currentUser.name"
+                [alt]="currentUser.name"
+                class="w-10 h-10 rounded-full border-2 border-primary-500"
+              />
+              <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
             </button>
 
-            <!-- Dropdown Menu -->
-            @if (isDropdownOpen()) {
-              <div
-                class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2"
-              >
-                <a
-                  routerLink="/painel"
-                  (click)="closeDropdown()"
-                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                >
+            @if (isProfileDropdownOpen) {
+              <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 border border-gray-200">
+                <a routerLink="/painel" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                   Meu Painel
                 </a>
-                <a
-                  routerLink="/perfil"
-                  (click)="closeDropdown()"
-                  class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
-                >
+                <a routerLink="/perfil" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition">
                   Editar Perfil
                 </a>
-                <hr class="my-2" />
+                <hr class="my-2">
                 <button
                   (click)="logout()"
-                  class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 transition-colors"
+                  class="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100 transition"
                 >
                   Sair
                 </button>
               </div>
             }
           </div>
-        } @else {
-          <!-- Login/Register Buttons -->
-          <a
-            routerLink="/login"
-            class="px-4 py-2 text-indigo-600 hover:text-indigo-800 transition-colors font-medium"
-          >
-            Login
-          </a>
-          <a
-            routerLink="/cadastro"
-            class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-medium"
-          >
-            Cadastre-se
-          </a>
         }
       </div>
 
       <!-- Mobile Menu Button -->
-      <button (click)="toggleMenu()" class="md:hidden focus:outline-none">
-        <svg
-          class="w-6 h-6 text-gray-700"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16M4 18h16"
-          ></path>
+      <button
+        (click)="toggleMenu()"
+        class="md:hidden focus:outline-none"
+      >
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          @if (!isMenuOpen) {
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          } @else {
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          }
         </svg>
       </button>
     </div>
 
     <!-- Mobile Menu -->
-    @if (isMenuOpen()) {
-      <div class="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
-        <div class="flex flex-col space-y-3">
-          <a
-            routerLink="/explorar"
-            (click)="toggleMenu()"
-            class="text-gray-700 hover:text-indigo-600 transition-colors"
-          >
-            Explorar
+    @if (isMenuOpen) {
+      <div class="md:hidden mt-4 space-y-3">
+        <a routerLink="/explorar" class="block text-gray-700 hover:text-primary-600 font-medium">
+          Explorar
+        </a>
+
+        @if (isAuthenticated) {
+          <a routerLink="/meus-projetos" class="block text-gray-700 hover:text-primary-600 font-medium">
+            Meus Projetos
           </a>
-          <a
-            routerLink="/publicacoes"
-            (click)="toggleMenu()"
-            class="text-gray-700 hover:text-indigo-600 transition-colors"
-          >
-            Publicações
-          </a>
-          <a
-            routerLink="/criar-projeto"
-            (click)="toggleMenu()"
-            class="text-gray-700 hover:text-indigo-600 transition-colors"
-          >
+          <a routerLink="/criar-projeto" class="block text-gray-700 hover:text-primary-600 font-medium">
             Criar Projeto
           </a>
+          <a routerLink="/painel" class="block text-gray-700 hover:text-primary-600 font-medium">
+            Meu Painel
+          </a>
+          <a routerLink="/perfil" class="block text-gray-700 hover:text-primary-600 font-medium">
+            Editar Perfil
+          </a>
+          <button
+            (click)="logout()"
+            class="block w-full text-left text-red-600 hover:text-red-700 font-medium"
+          >
+            Sair
+          </button>
+        } @else {
+          <a routerLink="/login" class="block text-gray-700 hover:text-primary-600 font-medium">
+            Login
+          </a>
+          <a
+            routerLink="/cadastro"
+            class="block px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition font-medium text-center"
+          >
+            Cadastre-se
+          </a>
+        }
 
-          @if (isAuthenticated$ | async) {
-            <a
-              routerLink="/painel"
-              (click)="toggleMenu()"
-              class="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              Meu Painel
-            </a>
-            <a
-              routerLink="/configuracoes"
-              (click)="toggleMenu()"
-              class="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              Configurações
-            </a>
-            <a
-              routerLink="/perfil"
-              (click)="toggleMenu()"
-              class="text-gray-700 hover:text-indigo-600 transition-colors"
-            >
-              Editar Perfil
-            </a>
-            <button
-              (click)="logout(); toggleMenu()"
-              class="text-left text-red-600 hover:text-red-800 transition-colors"
-            >
-              Sair
-            </button>
-          } @else {
-            <a
-              routerLink="/login"
-              (click)="toggleMenu()"
-              class="text-indigo-600 hover:text-indigo-800 transition-colors"
-            >
-              Login
-            </a>
-            <a
-              routerLink="/cadastro"
-              (click)="toggleMenu()"
-              class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors text-center"
-            >
-              Cadastre-se
-            </a>
-          }
+        <!-- Mobile Search -->
+        <div class="relative pt-2">
+          <input
+            type="text"
+            placeholder="Buscar projetos..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+          />
         </div>
       </div>
     }
