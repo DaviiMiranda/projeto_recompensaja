@@ -19,6 +19,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/explorar/explorar.component').then(m => m.ExplorarComponent)
   },
   {
+    path: 'publicacoes',
+    loadComponent: () => import('./pages/publications/publications.component').then(m => m.PublicationsComponent)
+  },
+  {
+    path: 'publicacoes/:id',
+    loadComponent: () => import('./pages/publication-details/publication-details.component').then(m => m.PublicationDetailsComponent)
+  },
+  {
     path: 'criar-projeto',
     loadComponent: () => import('./pages/criar-projeto/criar-projeto.component').then(m => m.CriarProjetoComponent),
     canActivate: [authGuard]

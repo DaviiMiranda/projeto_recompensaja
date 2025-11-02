@@ -14,6 +14,9 @@
         <a routerLink="/explorar" class="text-gray-700 hover:text-indigo-600 transition-colors">
           Explorar
         </a>
+        <a routerLink="/publicacoes" class="text-gray-700 hover:text-indigo-600 transition-colors">
+          Publicações
+        </a>
         <a routerLink="/criar-projeto" class="text-gray-700 hover:text-indigo-600 transition-colors">
           Criar Projeto
         </a>
@@ -145,6 +148,13 @@
             class="text-gray-700 hover:text-indigo-600 transition-colors"
           >
             Explorar
+          </a>
+          <a
+            routerLink="/publicacoes"
+            (click)="toggleMenu()"
+            class="text-gray-700 hover:text-indigo-600 transition-colors"
+          >
+            Publicações
           </a>
           <a
             routerLink="/criar-projeto"

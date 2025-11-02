@@ -55,14 +55,14 @@
       <div *ngIf="project.recompensas && project.recompensas.length > 0">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Recompensas</h2>
         <div class="space-y-4">
-          <div *for="let reward of project.recompensas" class="bg-white rounded-lg shadow-lg p-6 cursor-pointer hover:shadow-xl transition-shadow" (click)="selectReward(reward)">
+          <div *ngFor="let reward of project.recompensas" class="bg-white rounded-lg shadow-lg p-6 cursor-pointer hover:shadow-xl transition-shadow" (click)="selectReward(reward)">
             <p class="font-bold text-lg">{{ reward.titulo }}</p>
             <p class="text-indigo-600 font-semibold mb-2">{{ formatCurrency(reward.valorMinimo) }} ou mais</p>
             <p class="text-gray-700">{{ reward.descricao }}</p>
-            <div *if="reward.itensInclusos" class="mt-2">
+            <div *ngIf="reward.itensInclusos" class="mt-2">
               <p class="text-sm font-semibold">Itens inclusos:</p>
               <ul class="list-disc list-inside text-sm text-gray-600">
-                <li *for="let item of reward.itensInclusos">{{ item }}</li>
+                <li *ngFor="let item of reward.itensInclusos">{{ item }}</li>
               </ul>
             </div>
           </div>

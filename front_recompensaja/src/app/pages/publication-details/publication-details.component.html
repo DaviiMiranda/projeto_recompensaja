@@ -1,0 +1,137 @@
+<div *ngIf="publication() as pub" class="publication-details-page">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Breadcrumb / Voltar -->
+    <div class="breadcrumb">
+      <a routerLink="/publicacoes" class="back-link">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Voltar para publicações
+      </a>
+    </div>
+
+    <!-- Card Principal -->
+    <article class="publication-card">
+      <!-- Header -->
+      <header class="publication-header">
+        <div class="author-section">
+          <div class="author-avatar">
+            <img 
+              *ngIf="pub.autorFoto; else defaultAvatar" 
+              [src]="pub.autorFoto" 
+              [alt]="pub.autorNome"
+            />
+            <ng-template #defaultAvatar>
+              <div class="default-avatar">
+                {{ pub.autorNome.charAt(0).toUpperCase() }}
+              </div>
+            </ng-template>
+          </div>
+          <div class="author-info">
+            <h3 class="author-name">{{ pub.autorNome }}</h3>
+            <p class="publication-date">{{ getTimeAgo(pub.dataPublicacao) }}</p>
+          </div>
+        </div>
+
+        <!-- Badge do Projeto -->
+        <a 
+          *ngIf="pub.projetoId && pub.projetoTitulo" 
+          [routerLink]="['/projects', pub.projetoId]"
+          class="project-link"
+        >
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm2 0v8h12V6H4z"/>
+          </svg>
+          {{ pub.projetoTitulo }}
+        </a>
+      </header>
+
+      <!-- Título -->
+      <h1 class="publication-title">{{ pub.titulo }}</h1>
+
+      <!-- Categorias -->
+      <div *ngIf="pub.categorias && pub.categorias.length > 0" class="categories">
+        <span *ngFor="let categoria of pub.categorias" class="category-tag">
+          {{ categoria }}
+        </span>
+      </div>
+
+      <!-- Imagem Principal -->
+      <div *ngIf="pub.imagemUrl" class="publication-image">
+        <img [src]="pub.imagemUrl" [alt]="pub.titulo" />
+      </div>
+
+      <!-- Conteúdo Completo -->
+      <div class="publication-content">
+        <p>{{ pub.conteudo }}</p>
+      </div>
+
+      <!-- Ações (Like e Comentários) -->
+      <div class="publication-actions">
+        <button 
+          class="action-btn like-btn"
+          [class.liked]="isLiked()"
+          (click)="toggleLike()"
+        >
+          <svg class="w-6 h-6" [class.fill-current]="isLiked()" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+          </svg>
+          <span>{{ pub.likes }} curtidas</span>
+        </button>
+
+        <div class="action-info">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+          </svg>
+          <span>{{ pub.comentarios }} comentários</span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Seção de Comentários -->
+    <section class="comments-section">
+      <h2 class="comments-title">Comentários ({{ mockComments.length }})</h2>
+
+      <div class="comments-list">
+        <div *ngFor="let comment of mockComments" class="comment-item">
+          <div class="comment-avatar">
+            <img 
+              *ngIf="comment.autorFoto; else defaultCommentAvatar" 
+              [src]="comment.autorFoto" 
+              [alt]="comment.autorNome"
+            />
+            <ng-template #defaultCommentAvatar>
+              <div class="default-avatar">
+                {{ comment.autorNome.charAt(0).toUpperCase() }}
+              </div>
+            </ng-template>
+          </div>
+
+          <div class="comment-content">
+            <div class="comment-header">
+              <h4 class="comment-author">{{ comment.autorNome }}</h4>
+              <span class="comment-date">{{ getTimeAgo(comment.dataComentario) }}</span>
+            </div>
+            <p class="comment-text">{{ comment.conteudo }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form de Novo Comentário (Desabilitado por enquanto) -->
+      <div class="new-comment-form">
+        <p class="form-disabled-message">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Sistema de comentários em desenvolvimento
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div *ngIf="!publication()" class="loading-state">
+  <div class="container mx-auto px-4 py-8">
+    <p class="text-center text-gray-600">Carregando publicação...</p>
+  </div>
+</div>

@@ -54,6 +54,51 @@ export class PublicationService {
       likes: 203,
       comentarios: 34,
       categorias: ['Games', 'Design']
+    },
+    {
+      id: '4',
+      titulo: 'Primeira oficina comunitária realizada com sucesso!',
+      conteudo: 'Ontem realizamos nossa primeira oficina aberta à comunidade e foi simplesmente incrível! Mais de 50 pessoas compareceram para aprender sobre técnicas de pintura e arte urbana. Ver o entusiasmo das pessoas, principalmente das crianças, nos encheu de esperança e motivação. Esse é apenas o começo de uma série de atividades que vamos promover. O próximo encontro já está marcado para o próximo sábado. Contamos com a presença de todos!',
+      autorNome: 'Fernanda Oliveira',
+      autorFoto: 'https://ui-avatars.com/api/?name=Fernanda+Oliveira&background=14b8a6&color=fff',
+      autorId: 'user-4',
+      projetoId: 'proj-2',
+      projetoTitulo: 'Arte Urbana - Mural Comunitário',
+      imagemUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800',
+      dataPublicacao: new Date('2024-01-28'),
+      likes: 127,
+      comentarios: 18,
+      categorias: ['Arte', 'Comunidade', 'Educação']
+    },
+    {
+      id: '5',
+      titulo: 'Beta fechado disponível para os primeiros apoiadores',
+      conteudo: 'Grande novidade! Estamos abrindo o acesso ao beta fechado do nosso jogo para os 100 primeiros apoiadores. Vocês receberão um código exclusivo por e-mail nas próximas 48 horas. Estamos ansiosos para receber o feedback de vocês sobre a jogabilidade, gráficos e história. Cada opinião é fundamental para aprimorarmos o produto final. Lembrando que esta versão ainda contém bugs e está em desenvolvimento ativo. Divirtam-se e nos enviem suas impressões!',
+      autorNome: 'Pedro Henrique Alves',
+      autorFoto: 'https://ui-avatars.com/api/?name=Pedro+Alves&background=8b5cf6&color=fff',
+      autorId: 'user-5',
+      projetoId: 'proj-3',
+      projetoTitulo: 'Game Indie - Aventura Brasileira',
+      imagemUrl: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800',
+      dataPublicacao: new Date('2024-01-30'),
+      likes: 342,
+      comentarios: 67,
+      categorias: ['Games', 'Tecnologia']
+    },
+    {
+      id: '6',
+      titulo: 'Parceria com universidade local para pesquisa científica',
+      conteudo: 'Temos o prazer de anunciar uma parceria estratégica com a Universidade Federal! A equipe de engenharia renovável vai nos auxiliar na validação técnica e na otimização do nosso sistema de captação de energia. Além disso, os alunos terão a oportunidade de participar como estagiários no desenvolvimento do projeto. Essa colaboração representa um marco importante e vai acelerar significativamente nosso cronograma de testes e implementação.',
+      autorNome: 'Dr. Roberto Farias',
+      autorFoto: 'https://ui-avatars.com/api/?name=Roberto+Farias&background=0ea5e9&color=fff',
+      autorId: 'user-6',
+      projetoId: 'proj-1',
+      projetoTitulo: 'EcoTech - Energia Sustentável',
+      imagemUrl: 'https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=800',
+      dataPublicacao: new Date('2024-02-01'),
+      likes: 215,
+      comentarios: 41,
+      categorias: ['Tecnologia', 'Sustentabilidade', 'Educação']
     }
   ];
 
