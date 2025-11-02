@@ -1,0 +1,49 @@
+/* Animações */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.container {
+  animation: slideIn 0.4s ease-out;
+}
+
+/* Linha truncada */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Cards com efeito hover */
+.shadow-lg {
+  transition: all 0.3s ease;
+}
+
+/* Grid responsiva */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Imagens com lazy loading */
+img {
+  transition: transform 0.3s ease;
+}
+
+img:hover {
+  transform: scale(1.05);
+}
+
+/* Barra de progresso com transição */
+[style*="width"] {
+  transition: width 0.3s ease;
+}

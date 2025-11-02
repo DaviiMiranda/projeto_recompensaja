@@ -164,11 +164,11 @@ export class SharedExamplesComponent {
 
   exampleProjects: Project[] = [
     {
-      id: 1,
+      id: "1",
       titulo: 'Projeto de Tecnologia Inovadora',
       descricaoCurta: 'Desenvolvimento de uma plataforma revolucionária para conectar desenvolvedores',
       imagemUrl: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop',
-      criadorId: 1,
+      descricaoCompleta: 'Este projeto visa criar uma plataforma que facilite a colaboração entre desenvolvedores de todo o mundo, oferecendo ferramentas avançadas de comunicação e gerenciamento de projetos.',
       criadorNome: 'João Silva',
       criadorFoto: 'https://i.pravatar.cc/150?img=1',
       metaValor: 50000,
@@ -180,11 +180,11 @@ export class SharedExamplesComponent {
       numeroApoiadores: 156
     },
     {
-      id: 2,
+      id: "2",
       titulo: 'Projeto de Arte Comunitária',
       descricaoCurta: 'Criação de um mural colaborativo na comunidade local com artistas locais',
+      descricaoCompleta: 'Este projeto busca envolver a comunidade na criação de um mural que represente a cultura e história local, promovendo a arte como ferramenta de transformação social.',
       imagemUrl: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=300&fit=crop',
-      criadorId: 2,
       criadorNome: 'Maria Santos',
       metaValor: 15000,
       valorArrecadado: 8500,
@@ -195,11 +195,11 @@ export class SharedExamplesComponent {
       numeroApoiadores: 67
     },
     {
-      id: 3,
+      id: "3",
       titulo: 'Startup de Energia Sustentável',
       descricaoCurta: 'Desenvolver soluções de energia solar acessíveis para comunidades rurais',
+      descricaoCompleta: 'Nosso objetivo é criar painéis solares de baixo custo e sistemas de armazenamento de energia para levar eletricidade limpa a áreas remotas, melhorando a qualidade de vida e promovendo a sustentabilidade.',
       imagemUrl: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=400&h=300&fit=crop',
-      criadorId: 3,
       criadorNome: 'Pedro Oliveira',
       criadorFoto: 'https://i.pravatar.cc/150?img=3',
       metaValor: 100000,

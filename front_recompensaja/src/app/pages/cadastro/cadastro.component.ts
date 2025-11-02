@@ -1,21 +1,61 @@
-import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { passwordMatchValidator } from '../../modules/auth/validators/password-match.validator';
+import { InputComponent } from '../../shared/components/input/input.component';
+import { ButtonComponent } from '../../shared/components/button/button.component';
 
 @Component({
   selector: 'app-cadastro',
-  imports: [RouterLink],
-  template: `
-    <div class="container mx-auto px-4 py-12">
-      <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
-        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Cadastro</h2>
-        <p class="text-gray-600 text-center mb-4">Em breve: formulário de cadastro completo</p>
-        <div class="text-center">
-          <a routerLink="/login" class="text-indigo-600 hover:text-indigo-800 font-medium">
-            Já tem uma conta? Faça login
-          </a>
-        </div>
-      </div>
-    </div>
-  `
+  standalone: true,
+  imports: [ReactiveFormsModule, RouterLink, InputComponent, ButtonComponent],
+  templateUrl: './cadastro.component.html',
+  styleUrls: ['./cadastro.component.css']
 })
-export class CadastroComponent {}
+export class CadastroComponent {
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+
+  isLoading = false;
+  registerForm: FormGroup;
+
+  constructor() {
+    this.registerForm = this.fb.group({
+      nome: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required, Validators.minLength(8)]],
+      confirmarSenha: ['', [Validators.required]]
+    }, {
+      validators: passwordMatchValidator
+    });
+  }
+
+  get nome(): FormControl {
+    return this.registerForm.get('nome') as FormControl;
+  }
+
+  get email(): FormControl {
+    return this.registerForm.get('email') as FormControl;
+  }
+
+  get senha(): FormControl {
+    return this.registerForm.get('senha') as FormControl;
+  }
+
+  get confirmarSenha(): FormControl {
+    return this.registerForm.get('confirmarSenha') as FormControl;
+  }
+
+  onSubmit(): void {
+    if (this.registerForm.invalid) {
+      return;
+    }
+    this.isLoading = true;
+    console.log('Formulário enviado:', this.registerForm.value);
+    // Simula uma chamada de API
+    setTimeout(() => {
+      this.isLoading = false;
+      // this.router.navigate(['/painel']); // Redirecionar após sucesso
+    }, 2000);
+  }
+}

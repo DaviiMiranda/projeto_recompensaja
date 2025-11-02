@@ -1,11 +1,12 @@
+import { Reward } from './reward.model';
+
 export interface Project {
-  id: number;
+  id: string;
   titulo: string;
   descricaoCurta: string;
-  descricaoCompleta?: string;
+  descricaoCompleta: string;
   imagemUrl: string;
   videoUrl?: string;
-  criadorId: number;
   criadorNome: string;
   criadorFoto?: string;
   metaValor: number;
@@ -15,6 +16,8 @@ export interface Project {
   categoria: string;
   status: ProjectStatus;
   numeroApoiadores?: number;
+  recompensas?: Reward[];
+  tags?: string[];
 }
 
 export enum ProjectStatus {

@@ -1,45 +1,104 @@
-import { Component } from '@angular/core';
+import { Component, signal, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-painel',
-  imports: [CommonModule],
-  template: `
-    <div class="container mx-auto px-4 py-12">
-      <h1 class="text-4xl font-bold text-gray-800 mb-8">Meu Painel</h1>
-      
-      @if (currentUser$ | async; as user) {
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <div class="flex items-center space-x-4">
-            <img
-              [src]="user.avatar || 'https://ui-avatars.com/api/?name=' + user.nome"
-              [alt]="user.nome"
-              class="w-20 h-20 rounded-full"
-            />
-            <div>
-              <h2 class="text-2xl font-bold text-gray-800">{{ user.nome }}</h2>
-              <p class="text-gray-600">{{ user.email }}</p>
-              <div class="flex gap-2 mt-2">
-                @for (role of user.roles; track role) {
-                  <span class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm">
-                    {{ role }}
-                  </span>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-
-      <p class="text-gray-600">Em breve: dashboard completo com estatísticas e projetos</p>
-    </div>
-  `
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './painel.component.html',
+  styleUrls: ['./painel.component.css']
 })
-export class PainelComponent {
-  constructor(private authService: AuthService) {}
+export class PainelComponent implements OnDestroy {
+  editingSection = signal<string | null>(null);
+  
+  formData = signal({
+    nome: '',
+    email: '',
+    senhaAtual: '',
+    novaSenha: '',
+    confirmarSenha: ''
+  });
 
-  get currentUser$() {
-    return this.authService.currentUser$;
+  currentUser$!: Observable<any>; // ou use um tipo User | null
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private authService: AuthService) {
+    // atribuir depois que o serviço foi injetado
+    this.currentUser$ = this.authService.currentUser$;
+
+    // se quiser sincronizar o form com o usuário atual via subscription:
+    this.currentUser$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(user => {
+        if (user) {
+          this.formData.set({
+            ...this.formData(),
+            nome: user.nome,
+            email: user.email
+          });
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  startEditing(section: string): void {
+    this.editingSection.set(section);
+  }
+
+  cancelEditing(): void {
+    this.editingSection.set(null);
+    this.resetForm();
+  }
+
+  saveNome(): void {
+    const user = this.authService.getCurrentUser();
+    if (user && this.formData().nome.trim()) {
+      user.nome = this.formData().nome;
+      this.updateUser(user);
+      this.editingSection.set(null);
+    }
+  }
+
+  saveEmail(): void {
+    const user = this.authService.getCurrentUser();
+    if (user && this.formData().email.trim()) {
+      user.email = this.formData().email;
+      this.updateUser(user);
+      this.editingSection.set(null);
+    }
+  }
+
+  saveSenha(): void {
+    if (this.formData().novaSenha === this.formData().confirmarSenha && this.formData().novaSenha.trim()) {
+      // Aqui conectar com a API real
+      console.log('Senha alterada para:', this.formData().novaSenha);
+      this.editingSection.set(null);
+      this.resetForm();
+    }
+  }
+
+  private updateUser(user: any): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    // ideal: notificar o AuthService para propagar a mudança (ex: authService.setCurrentUser(user))
+  }
+
+  private resetForm(): void {
+    const user = this.authService.getCurrentUser();
+    this.formData.set({
+      nome: user?.nome || '',
+      email: user?.email || '',
+      senhaAtual: '',
+      novaSenha: '',
+      confirmarSenha: ''
+    });
   }
 }

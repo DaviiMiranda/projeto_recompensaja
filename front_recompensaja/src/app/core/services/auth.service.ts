@@ -24,7 +24,7 @@ export class AuthService {
 
     const mockUser: User = {
       id: '1',
-      nome: 'Usuário Demo',
+      nome: 'Usuário Admin',
       email: email,
       roles: ['CREATOR', 'BACKER'],
       avatar: 'https://ui-avatars.com/api/?name=Usuario+Demo&background=4f46e5&color=fff'
