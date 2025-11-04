@@ -1,45 +1,21 @@
-<div class="bg-gray-50 min-h-screen">
+<div class="min-h-screen bg-gray-50">
   <!-- Hero Section -->
-  <section class="bg-gradient-to-r from-primary-600 to-secondary-600 text-white py-20">
+  <section class="bg-gradient-to-r from-primary-600 to-blue-600 text-white py-20">
     <div class="container mx-auto px-4 text-center">
-      <h1 class="text-5xl md:text-6xl font-display font-bold mb-6">
+      <h1 class="text-5xl md:text-6xl font-bold mb-6">
         Transforme Suas Ideias em Realidade
       </h1>
-      <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+      <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
         Conecte-se com apoiadores que acreditam no seu projeto e faça seus sonhos acontecerem
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="/criar-projeto"
-          class="px-8 py-4 bg-white text-primary-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition"
-        >
+        <a routerLink="/create-project" class="px-8 py-4 bg-white text-primary-600 rounded-lg font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg">
           Criar Projeto
         </a>
-        <a
-          href="/explorar"
-          class="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-600 transition"
-        >
+        <a routerLink="/explore" class="px-8 py-4 bg-transparent border-2 border-white text-white rounded-lg font-semibold text-lg hover:bg-white hover:text-primary-600 transition-colors">
           Explorar Projetos
         </a>
       </div>
-    </div>
-  </section>
-
-  <!-- Projects Section -->
-  <section class="container mx-auto px-4 py-16">
-    <div class="flex justify-between items-center mb-8">
-      <h2 class="text-3xl font-display font-bold text-gray-900">
-        Projetos em Destaque
-      </h2>
-      <a href="/explorar" class="text-primary-600 hover:text-primary-700 font-medium">
-        Ver todos →
-      </a>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      @for (project of projects; track project.id) {
-        <app-project-card [project]="project"></app-project-card>
-      }
     </div>
   </section>
 
@@ -47,16 +23,16 @@
   <section class="bg-white py-16">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-        <div>
-          <p class="text-4xl font-bold text-primary-600 mb-2">1.234+</p>
+        <div class="p-6">
+          <p class="text-5xl font-bold text-primary-600 mb-2">1.234+</p>
           <p class="text-gray-600 text-lg">Projetos Financiados</p>
         </div>
-        <div>
-          <p class="text-4xl font-bold text-primary-600 mb-2">R$ 5M+</p>
+        <div class="p-6">
+          <p class="text-5xl font-bold text-primary-600 mb-2">R$ 5M+</p>
           <p class="text-gray-600 text-lg">Arrecadado</p>
         </div>
-        <div>
-          <p class="text-4xl font-bold text-primary-600 mb-2">50k+</p>
+        <div class="p-6">
+          <p class="text-5xl font-bold text-primary-600 mb-2">50k+</p>
           <p class="text-gray-600 text-lg">Apoiadores</p>
         </div>
       </div>
@@ -65,45 +41,87 @@
 
   <!-- How It Works Section -->
   <section class="container mx-auto px-4 py-16">
-    <h2 class="text-3xl font-display font-bold text-gray-900 text-center mb-12">
+    <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">
       Como Funciona
     </h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div class="text-center">
+      <div class="text-center p-6">
         <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold mb-2">1. Crie seu Projeto</h3>
+        <h3 class="text-xl font-semibold mb-3 text-gray-900">1. Crie seu Projeto</h3>
         <p class="text-gray-600">
           Conte sua história, defina sua meta e compartilhe sua visão com o mundo
         </p>
       </div>
 
-      <div class="text-center">
+      <div class="text-center p-6">
         <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold mb-2">2. Receba Apoio</h3>
+        <h3 class="text-xl font-semibold mb-3 text-gray-900">2. Receba Apoio</h3>
         <p class="text-gray-600">
           Conecte-se com pessoas que acreditam na sua ideia e querem fazer parte dela
         </p>
       </div>
 
-      <div class="text-center">
+      <div class="text-center p-6">
         <div class="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
           </svg>
         </div>
-        <h3 class="text-xl font-semibold mb-2">3. Realize seu Sonho</h3>
+        <h3 class="text-xl font-semibold mb-3 text-gray-900">3. Realize seu Sonho</h3>
         <p class="text-gray-600">
           Alcance sua meta e transforme seu projeto em realidade
         </p>
       </div>
+    </div>
+  </section>
+
+  <!-- Projetos em Destaque -->
+  <section class="container mx-auto px-4 py-16 bg-white">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-3xl font-bold text-gray-900">
+        Projetos em Destaque
+      </h2>
+      <a routerLink="/explore" class="text-primary-600 hover:text-primary-700 font-semibold flex items-center">
+        Ver todos
+        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+
+    <div *ngIf="isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let i of [1,2,3]" class="bg-gray-200 rounded-xl h-96 animate-pulse"></div>
+    </div>
+
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <app-project-card *ngFor="let project of featuredProjects" [project]="project"></app-project-card>
+    </div>
+  </section>
+
+  <!-- Projetos Recentes -->
+  <section class="container mx-auto px-4 py-16">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-3xl font-bold text-gray-900">
+        Projetos Recentes
+      </h2>
+      <a routerLink="/explore" class="text-primary-600 hover:text-primary-700 font-semibold flex items-center">
+        Ver todos
+        <svg class="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </a>
+    </div>
+
+    <div *ngIf="!isLoading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <app-project-card *ngFor="let project of recentProjects" [project]="project"></app-project-card>
     </div>
   </section>
 </div>

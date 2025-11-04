@@ -22,16 +22,34 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<User> {
-    const mockUser: User = {
-      id: '1',
-      name: 'João Silva',
-      email: email,
-      avatar: 'https://ui-avatars.com/api/?name=João+Silva&background=0ea5e9&color=fff'
+    // Credenciais de teste
+    if (email === 'teste@recompensaja.com' && password === '123456') {
+      const mockUser: User = {
+        id: '1',
+        name: 'João Silva',
+        email: email,
+        avatar: `https://ui-avatars.com/api/?name=João+Silva&background=0ea5e9&color=fff`
+      };
+      return of(mockUser).pipe(delay(1000));
+    }
+
+    // Login inválido
+    return new Observable(observer => {
+      setTimeout(() => {
+        observer.error({ message: 'Credenciais inválidas' });
+      }, 1000);
+    });
+  }
+
+  register(name: string, email: string, password: string): Observable<User> {
+    const newUser: User = {
+      id: Date.now().toString(),
+      name,
+      email,
+      avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=0ea5e9&color=fff`
     };
 
-    return of(mockUser).pipe(
-      delay(1000)
-    );
+    return of(newUser).pipe(delay(1000));
   }
 
   setCurrentUser(user: User): void {
@@ -48,6 +66,11 @@ export class AuthService {
 
   getCurrentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  updateUser(user: User): void {
+    this.currentUserSubject.next(user);
+    localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
   isAuthenticated(): boolean {

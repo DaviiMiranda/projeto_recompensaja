@@ -1,0 +1,214 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="container mx-auto px-4 py-12">
+    <div class="animate-pulse space-y-6">
+      <div class="h-96 bg-gray-200 rounded-xl"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 space-y-4">
+          <div class="h-8 bg-gray-200 rounded w-1/2"></div>
+          <div class="h-4 bg-gray-200 rounded"></div>
+          <div class="h-4 bg-gray-200 rounded"></div>
+        </div>
+        <div class="space-y-4">
+          <div class="h-32 bg-gray-200 rounded"></div>
+          <div class="h-12 bg-gray-200 rounded"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && project" class="container mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Left Column: Image and Description -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Hero Image -->
+        <div class="rounded-xl overflow-hidden shadow-lg">
+          <img [src]="project.image" [alt]="project.title" class="w-full h-96 object-cover" />
+        </div>
+
+        <!-- Title and Creator -->
+        <div>
+          <h1 class="text-4xl font-bold text-gray-900 mb-2">{{ project.title }}</h1>
+          <p class="text-gray-600">
+            por
+            <a href="#" class="font-semibold text-primary-600 hover:text-primary-700">{{ project.creator }}</a>
+          </p>
+        </div>
+
+        <!-- Category and Status -->
+        <div class="flex flex-wrap gap-3">
+          <span class="inline-block px-4 py-2 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold">
+            {{ project.category }}
+          </span>
+          <span class="inline-block px-4 py-2 bg-green-100 text-green-700 rounded-full text-sm font-semibold" *ngIf="isProjectActive()">
+            Ativo
+          </span>
+          <span class="inline-block px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full text-sm font-semibold" *ngIf="!isProjectActive()">
+            Encerrado
+          </span>
+        </div>
+
+        <!-- Video -->
+        <div *ngIf="project.video" class="rounded-xl overflow-hidden shadow-lg bg-black aspect-video">
+          <iframe
+            [src]="project.video"
+            class="w-full h-full"
+            title="Project Video"
+            allowfullscreen
+            frameborder="0"
+          ></iframe>
+        </div>
+
+        <!-- Description -->
+        <div class="prose prose-lg max-w-none">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Sobre este projeto</h2>
+          <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ project.longDescription || project.description }}</p>
+        </div>
+      </div>
+
+      <!-- Right Column: Sticky Sidebar -->
+      <div class="lg:sticky lg:top-20 h-fit">
+        <div class="bg-white rounded-xl shadow-lg p-6 space-y-6">
+          <!-- Progress -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-2xl font-bold text-gray-900">{{ formatCurrency(project.raisedAmount) }}</span>
+              <span class="text-sm text-gray-600">de {{ formatCurrency(project.goalAmount) }}</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
+              <div
+                class="bg-primary-600 h-3 rounded-full transition-all"
+                [style.width.%]="getProgressPercentage()"
+              ></div>
+            </div>
+            <p class="text-sm text-gray-600">{{ getProgressPercentage().toFixed(0) }}% da meta</p>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+            <div class="text-center">
+              <p class="text-2xl font-bold text-gray-900">{{ project.backerCount }}</p>
+              <p class="text-sm text-gray-600">Apoiadores</p>
+            </div>
+            <div class="text-center">
+              <p class="text-2xl font-bold text-gray-900">{{ getDaysRemaining() }}</p>
+              <p class="text-sm text-gray-600">Dias restantes</p>
+            </div>
+          </div>
+
+          <!-- Deadline -->
+          <div class="pt-4 border-t border-gray-200">
+            <p class="text-sm text-gray-600 mb-1">Prazo de financiamento</p>
+            <p class="font-semibold text-gray-900">{{ formatDate(project.deadline) }}</p>
+          </div>
+
+          <!-- CTA Button -->
+          <button
+            *ngIf="isProjectActive()"
+            (click)="selectReward(null)"
+            class="w-full py-3 bg-primary-600 text-white font-bold rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Apoiar este projeto
+          </button>
+          <button
+            *ngIf="!isProjectActive()"
+            disabled
+            class="w-full py-3 bg-gray-300 text-gray-600 font-bold rounded-lg cursor-not-allowed"
+          >
+            Projeto encerrado
+          </button>
+        </div>
+
+        <!-- Rewards Section -->
+        <div class="mt-6 bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-4">Níveis de Recompensa</h3>
+          <div class="space-y-4">
+            <div
+              *ngFor="let reward of project.rewards"
+              (click)="selectReward(reward)"
+              class="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-600 hover:bg-primary-50 cursor-pointer transition-all"
+            >
+              <div class="flex items-start justify-between mb-2">
+                <div>
+                  <h4 class="font-bold text-gray-900">{{ reward.title }}</h4>
+                  <p class="text-sm text-gray-600">{{ formatCurrency(reward.amount) }}</p>
+                </div>
+                <span *ngIf="reward.isLimited && reward.remainingQuantity! > 0" class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                  {{ reward.remainingQuantity }} restantes
+                </span>
+                <span *ngIf="reward.isLimited && reward.remainingQuantity! <= 0" class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                  Indisponível
+                </span>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">{{ reward.description }}</p>
+              <p class="text-xs text-gray-500">Entrega: {{ formatDate(reward.estimatedDelivery) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Support Modal -->
+  <div *ngIf="showSupportModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-xl max-w-md w-full p-6 space-y-6">
+      <div class="flex items-center justify-between">
+        <h3 class="text-2xl font-bold text-gray-900">Apoiar Projeto</h3>
+        <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div *ngIf="!selectedReward" class="space-y-3">
+        <p class="text-gray-600 mb-4">Escolha um nível de recompensa:</p>
+        <button
+          *ngFor="let reward of project!.rewards"
+          (click)="selectReward(reward)"
+          [disabled]="reward.isLimited && reward.remainingQuantity! <= 0"
+          class="w-full p-4 text-left border-2 border-gray-200 rounded-lg hover:border-primary-600 hover:bg-primary-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        >
+          <div class="font-bold text-gray-900">{{ reward.title }}</div>
+          <div class="text-sm text-primary-600 font-semibold">{{ formatCurrency(reward.amount) }}</div>
+          <div class="text-xs text-gray-600">{{ reward.description }}</div>
+        </button>
+      </div>
+
+      <div *ngIf="selectedReward" class="space-y-4">
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <p class="text-sm text-gray-600 mb-1">Recompensa selecionada</p>
+          <h4 class="text-lg font-bold text-gray-900">{{ selectedReward.title }}</h4>
+          <p class="text-2xl font-bold text-primary-600 mt-2">{{ formatCurrency(selectedReward.amount) }}</p>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Quantidade</label>
+          <div class="flex items-center gap-2">
+            <button (click)="quantity = Math.max(1, quantity - 1)" class="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-100">
+              −
+            </button>
+            <input type="number" [(ngModel)]="quantity" min="1" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-center" />
+            <button (click)="quantity = quantity + 1" class="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-100">
+              +
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+          <p class="text-sm text-blue-700">Total: <span class="font-bold">{{ formatCurrency(selectedReward.amount * quantity) }}</span></p>
+        </div>
+
+        <div class="flex gap-3">
+          <button (click)="selectReward(null)" class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50">
+            Voltar
+          </button>
+          <button (click)="supportProject()" class="flex-1 px-4 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700">
+            Confirmar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

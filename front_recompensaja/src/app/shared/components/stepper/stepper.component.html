@@ -1,0 +1,31 @@
+<div class="flex items-center justify-center mb-8">
+  <div *ngFor="let step of steps; let i = index" class="flex items-center">
+    <!-- Step Circle -->
+    <div class="flex flex-col items-center">
+      <div 
+        [class]="'w-12 h-12 rounded-full flex items-center justify-center font-semibold transition-all ' +
+                 (i < currentStep ? 'bg-primary-600 text-white' : 
+                  i === currentStep ? 'bg-primary-600 text-white ring-4 ring-primary-200' : 
+                  'bg-gray-200 text-gray-600')"
+      >
+        <svg *ngIf="i < currentStep" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+        <span *ngIf="i >= currentStep">{{ i + 1 }}</span>
+      </div>
+      <p 
+        [class]="'mt-2 text-sm font-medium ' + 
+                 (i <= currentStep ? 'text-gray-900' : 'text-gray-500')"
+      >
+        {{ step.label }}
+      </p>
+    </div>
+
+    <!-- Connector Line -->
+    <div 
+      *ngIf="i < steps.length - 1" 
+      [class]="'h-1 w-24 mx-4 transition-all ' + 
+               (i < currentStep ? 'bg-primary-600' : 'bg-gray-200')"
+    ></div>
+  </div>
+</div>

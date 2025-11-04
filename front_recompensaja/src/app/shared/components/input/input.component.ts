@@ -1,13 +1,13 @@
 import { Component, Input, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormControl } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-input',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './input.component.html',
-  styleUrls: ['./input.component.css'],
+  styleUrl: './input.component.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -17,15 +17,14 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, ReactiveFormsModule, FormContr
   ]
 })
 export class InputComponent implements ControlValueAccessor {
-  @Input() label: string = '';
-  @Input() type: string = 'text';
-  @Input() placeholder: string = '';
-  @Input() errorMessages: { [key: string]: string } = {};
-  @Input() control: FormControl | null = null;
+  @Input() label = '';
+  @Input() type: 'text' | 'email' | 'password' | 'number' | 'tel' = 'text';
+  @Input() placeholder = '';
+  @Input() error = '';
+  @Input() disabled = false;
+  @Input() required = false;
 
-  value: string = '';
-  disabled: boolean = false;
-
+  value = '';
   onChange: any = () => {};
   onTouched: any = () => {};
 
@@ -46,25 +45,12 @@ export class InputComponent implements ControlValueAccessor {
   }
 
   onInput(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    this.value = target.value;
+    const input = event.target as HTMLInputElement;
+    this.value = input.value;
     this.onChange(this.value);
   }
 
   onBlur(): void {
     this.onTouched();
-  }
-
-  get hasError(): boolean {
-    return !!(this.control && this.control.invalid && this.control.touched);
-  }
-
-  get errorMessage(): string {
-    if (!this.control || !this.control.errors) return '';
-    
-    const errors = this.control.errors;
-    const errorKey = Object.keys(errors)[0];
-    
-    return this.errorMessages[errorKey] || 'Campo inválido';
   }
 }

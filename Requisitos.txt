@@ -1,8 +1,8 @@
 Objetivo: Desenvolver a Single Page Application (SPA) completa para a plataforma "RecompensaJá". O foco é criar uma interface responsiva, moderna e intuitiva, construindo todos os componentes e telas com Angular e estilizando-os com Tailwind CSS.
-
+Estrutura de Módulos e Componentes
 Stack Tecnológica:
 
-    Framework: Angular 20
+    Framework: Angular 18
 
     Estilização: Tailwind CSS (utility-first) ja integrado
 
@@ -84,3 +84,65 @@ Módulo 2: SharedModule
             data de publicação
 
         InputComponent: Um wrapper para input que se integre com o Reactive Forms e exiba mensagens de erro de validação.
+
+Módulo 3: AuthModule (Rotas: /auth)
+
+    Objetivo: Gerenciar o fluxo de autenticação (lazy-loaded).
+
+    Páginas (Componentes):
+
+        LoginPage: Formulário (Reactive Forms) com Email, Senha e botão "Entrar".
+
+        RegisterPage: Formulário (Reactive Forms) com Nome, Email, Senha, Confirmar Senha.
+
+Módulo 4: ProjectModule (Rotas: /, /explore, /project/:id)
+
+    Objetivo: Gerenciar a descoberta e visualização de projetos (lazy-loaded).
+
+    Páginas (Componentes):
+
+        HomePage (Rota: /): A página inicial. Deve exibir:
+
+            Uma seção "Hero" (banner principal).
+
+            Uma grade de ProjectCardComponent para "Projetos em Destaque".
+
+            Uma grade de ProjectCardComponent para "Projetos Recentes".
+
+        ExplorePage (Rota: /explore):
+
+            Barra lateral de filtros (Tailwind) para Categoria, Status, etc.
+
+            Grade principal que exibe os resultados filtrados (usando ProjectCardComponent).
+
+        ProjectDetailsPage (Rota: /project/:id):
+
+            Layout de duas colunas.
+
+            Coluna Esquerda: Vídeo/Imagem principal, Descrição longa (Rich Text simulado).
+
+            Coluna Direita (sticky): Título, status (barra de progresso), Meta, Arrecadado, Nº de Apoiadores, Dias Restantes, e a lista de Níveis de Recompensa (componente RewardCardComponent).
+
+            O usuário deve poder clicar em uma recompensa para "apoiar".
+
+Módulo 5: UserDashboardModule (Rotas: /dashboard, /create-project)
+
+    Objetivo: Painel do usuário logado (protegido por AuthGuard).
+
+    Páginas (Componentes):
+
+        DashboardPage (Rota: /dashboard): Painel do Criador.
+
+            Deve exibir uma tabela (estilizada com Tailwind) dos projetos criados pelo usuário (Nome, Status, Arrecadado).
+
+        CreateProjectPage (Rota: /create-project):
+
+            Deve ser um formulário "wizard" (multi-etapas) usando Reactive Forms.
+
+            Etapa 1: Infos Básicas (Título, Categoria, Meta, Prazo).
+
+            Etapa 2: Detalhes (Descrição, Imagem/Vídeo).
+
+            Etapa 3: Recompensas (Um formulário dinâmico onde o usuário pode adicionar/remover múltiplos níveis de recompensa).
+
+faça um planejamento da implementação e me apresente para aprovação, apos isso crie uma lista de tarefas e faça em ordem

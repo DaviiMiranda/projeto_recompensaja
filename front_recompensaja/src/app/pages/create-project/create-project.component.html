@@ -1,0 +1,224 @@
+<div class="min-h-screen bg-gray-50 py-8">
+  <div class="container mx-auto px-4 max-w-4xl">
+    <!-- Header -->
+    <div class="mb-8 text-center">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">Criar Novo Projeto</h1>
+      <p class="text-gray-600">Preencha as informações para lançar sua campanha</p>
+    </div>
+
+    <!-- Stepper -->
+    <app-stepper [steps]="steps" [currentStep]="currentStep"></app-stepper>
+
+    <!-- Forms -->
+    <div class="bg-white rounded-xl shadow-md p-8 mb-6">
+      <!-- ETAPA 1: Informações Básicas -->
+      <div *ngIf="currentStep === 0">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Informações Básicas</h2>
+        <form [formGroup]="basicInfoForm" class="space-y-6">
+          <div>
+            <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
+              Título do Projeto <span class="text-red-600">*</span>
+            </label>
+            <input
+              id="title"
+              type="text"
+              formControlName="title"
+              placeholder="Ex: Smartwatch Revolucionário"
+              class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+            />
+            <p *ngIf="getFieldError(basicInfoForm, 'title')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError(basicInfoForm, 'title') }}
+            </p>
+          </div>
+
+          <div>
+            <label for="category" class="block text-sm font-medium text-gray-700 mb-1">
+              Categoria <span class="text-red-600">*</span>
+            </label>
+            <select id="category" formControlName="category" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500">
+              <option value="">Selecione uma categoria</option>
+              <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+            </select>
+            <p *ngIf="getFieldError(basicInfoForm, 'category')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError(basicInfoForm, 'category') }}
+            </p>
+          </div>
+
+          <div>
+            <label for="goalAmount" class="block text-sm font-medium text-gray-700 mb-1">
+              Meta de Arrecadação (R$) <span class="text-red-600">*</span>
+            </label>
+            <input id="goalAmount" type="number" formControlName="goalAmount" placeholder="10000" min="1000" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+            <p class="mt-1 text-sm text-gray-600">Mínimo: R$ 1.000</p>
+            <p *ngIf="getFieldError(basicInfoForm, 'goalAmount')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError(basicInfoForm, 'goalAmount') }}
+            </p>
+          </div>
+
+          <div>
+            <label for="deadline" class="block text-sm font-medium text-gray-700 mb-1">
+              Data de Término <span class="text-red-600">*</span>
+            </label>
+            <input id="deadline" type="date" formControlName="deadline" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+            <p class="mt-1 text-sm text-gray-600">Mínimo: 30 dias a partir de hoje</p>
+            <p *ngIf="getFieldError(basicInfoForm, 'deadline')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError(basicInfoForm, 'deadline') }}
+            </p>
+          </div>
+        </form>
+      </div>
+
+      <!-- ETAPA 2: Detalhes -->
+      <div *ngIf="currentStep === 1">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Detalhes do Projeto</h2>
+        <form [formGroup]="detailsForm" class="space-y-6">
+          <div>
+            <label for="shortDescription" class="block text-sm font-medium text-gray-700 mb-1">
+              Descrição Curta <span class="text-red-600">*</span>
+            </label>
+            <textarea id="shortDescription" formControlName="shortDescription" rows="3" maxlength="200" placeholder="Uma breve descrição (máx. 200 caracteres)" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
+            <p class="mt-1 text-sm text-gray-600">
+              {{ detailsForm.get('shortDescription')?.value?.length || 0 }}/200 caracteres
+            </p>
+            <p *ngIf="getFieldError(detailsForm, 'shortDescription')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError(detailsForm, 'shortDescription') }}
+            </p>
+          </div>
+
+          <div>
+            <label for="longDescription" class="block text-sm font-medium text-gray-700 mb-1">
+              Descrição Completa <span class="text-red-600">*</span>
+            </label>
+            <textarea id="longDescription" formControlName="longDescription" rows="8" placeholder="Conte detalhadamente sobre seu projeto..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
+            <p *ngIf="getFieldError(detailsForm, 'longDescription')" class="mt-1 text-sm text-red-600">
+              {{ getFieldError(detailsForm, 'longDescription') }}
+            </p>
+          </div>
+
+          <div>
+            <label for="video" class="block text-sm font-medium text-gray-700 mb-1">
+              URL do Vídeo (YouTube/Vimeo)
+            </label>
+            <input id="video" type="url" formControlName="video" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+            <p class="mt-1 text-sm text-gray-600">Opcional: adicione um vídeo</p>
+          </div>
+
+          <div>
+            <label for="image" class="block text-sm font-medium text-gray-700 mb-1">
+              URL da Imagem de Capa
+            </label>
+            <input id="image" type="url" formControlName="image" placeholder="https://unsplash.com/..." class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+            <p class="mt-1 text-sm text-gray-600">Cole uma URL de imagem</p>
+            <div *ngIf="detailsForm.get('image')?.value" class="mt-4">
+              <p class="text-sm font-medium text-gray-700 mb-2">Preview:</p>
+              <img [src]="detailsForm.get('image')?.value" alt="Preview" class="w-full h-48 object-cover rounded-lg" />
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- ETAPA 3: Recompensas -->
+      <div *ngIf="currentStep === 2">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Níveis de Recompensa</h2>
+          <button (click)="addReward()" class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Adicionar Recompensa
+          </button>
+        </div>
+
+        <form [formGroup]="rewardsForm">
+          <div formArrayName="rewards" class="space-y-6">
+            <div *ngFor="let reward of rewards.controls; let i = index" [formGroupName]="i" class="border-2 border-gray-200 rounded-xl p-6">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Recompensa #{{ i + 1 }}</h3>
+                <button *ngIf="rewards.length > 1" (click)="removeReward(i)" type="button" class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Título <span class="text-red-600">*</span></label>
+                  <input type="text" formControlName="title" placeholder="Ex: Apoiador Bronze" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Descrição <span class="text-red-600">*</span></label>
+                  <textarea formControlName="description" rows="2" placeholder="O que o apoiador receberá" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"></textarea>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Valor (R$) <span class="text-red-600">*</span></label>
+                  <input type="number" formControlName="amount" placeholder="50" min="10" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Entrega Estimada <span class="text-red-600">*</span></label>
+                  <input type="date" formControlName="estimatedDelivery" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="flex items-center">
+                    <input type="checkbox" formControlName="isLimited" class="w-4 h-4 text-primary-600 rounded focus:ring-primary-500" />
+                    <span class="ml-2 text-sm font-medium text-gray-700">Quantidade Limitada</span>
+                  </label>
+                </div>
+
+                <div *ngIf="reward.get('isLimited')?.value" class="md:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Quantidade Disponível <span class="text-red-600">*</span></label>
+                  <input type="number" formControlName="limitQuantity" placeholder="100" min="1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+
+        <div *ngIf="rewards.length === 0" class="text-center py-8 text-gray-600">
+          <p>Nenhuma recompensa adicionada. Adicione pelo menos uma!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="flex justify-between">
+      <button *ngIf="currentStep > 0" (click)="previousStep()" class="px-6 py-3 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition-colors flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Voltar
+      </button>
+      <div class="flex-1"></div>
+      <app-button *ngIf="currentStep < 2" (click)="nextStep()" [style]="'primary'">
+        Próximo
+        <svg class="w-5 h-5 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </app-button>
+      <app-button *ngIf="currentStep === 2" (click)="submitProject()" [style]="'primary'" [loading]="isSubmitting" [disabled]="isSubmitting">
+        <svg class="w-5 h-5 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+        {{ isSubmitting ? 'Publicando...' : 'Publicar Projeto' }}
+      </app-button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div *ngIf="showSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-xl p-8 max-w-md mx-4 text-center">
+    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+      <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+      </svg>
+    </div>
+    <h3 class="text-2xl font-bold text-gray-900 mb-2">Projeto Publicado!</h3>
+    <p class="text-gray-600 mb-4">Seu projeto foi publicado com sucesso.</p>
+    <p class="text-sm text-gray-500">Redirecionando...</p>
+  </div>
+</div>

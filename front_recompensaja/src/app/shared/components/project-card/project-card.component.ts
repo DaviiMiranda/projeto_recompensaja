@@ -1,14 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Project } from '../../../models/interfaces';
 
 @Component({
   selector: 'app-project-card',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterModule],
   templateUrl: './project-card.component.html',
-  styleUrls: ['./project-card.component.css']
+  styleUrl: './project-card.component.css'
 })
 export class ProjectCardComponent {
   @Input() project!: Project;
@@ -25,20 +25,7 @@ export class ProjectCardComponent {
     return Math.max(0, diffDays);
   }
 
-  get formattedRaisedAmount(): string {
-    return this.formatCurrency(this.project.raisedAmount);
-  }
-
-  get formattedGoalAmount(): string {
-    return this.formatCurrency(this.project.goalAmount);
-  }
-
-  get formattedPublishedDate(): string {
-    const date = new Date(this.project.publishedDate);
-    return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-  }
-
-  private formatCurrency(value: number): string {
+  formatCurrency(value: number): string {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL'
